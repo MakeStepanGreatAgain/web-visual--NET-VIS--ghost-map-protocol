@@ -46,8 +46,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ghost-map.git
-cd ghost-map
+git clone https://github.com/yourusername/ghost-map.git](https://github.com/MakeStepanGreatAgain/web-visual--NET-VIS--ghost-map-protocol
+cd web-visual--NET-VIS--ghost-map-protocol
 
 # Install dependencies
 pip3 install -r requirements.txt
