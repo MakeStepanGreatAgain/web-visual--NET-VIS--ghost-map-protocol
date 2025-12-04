@@ -33,18 +33,6 @@
 
 ---
 
-## 🖼️ Screenshots
-
-> **Note**: Add your screenshots here after deployment!
-
-```
-![Ghost Map Interface](screenshots/main.png)
-![Device Details](screenshots/details.png)
-![Network Graph](screenshots/graph.png)
-```
-
----
-
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -58,8 +46,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ghost-map.git
-cd ghost-map
+git clone https://github.com/MakeStepanGreatAgain/web-visual--NET-VIS--ghost-map-protocol
+cd web-visual--NET-VIS--ghost-map-protocol
 
 # Install dependencies
 pip3 install -r requirements.txt
@@ -70,7 +58,7 @@ python3 app.py
 
 The app will automatically detect your local IP and bind to it. Access the interface at:
 ```
-http://YOUR_LOCAL_IP:5001
+http://192.168.X.X:5001
 ```
 
 ### 🔓 Enhanced Mode (Optional)
@@ -217,7 +205,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Made with 💀 by R4ggedy**
+**Made 💀 by R4ggedy**
 
 ⭐ Star this repo if you find it useful!
 

@@ -189,11 +189,11 @@ if __name__ == '__main__':
     ██║╚██╗██║██╔══╝     ██║       ╚██╗ ██╔╝██║╚════██║
     ██║ ╚████║███████╗   ██║        ╚████╔╝ ██║███████║
     ╚═╝  ╚═══╝╚══════╝   ╚═╝         ╚═══╝  ╚═╝╚══════╝
-    \033[0m
-    \033[90m>> GHOST_MAP_PROTOCOL_INITIATED...\033[0m
-    \033[90m>> SYSTEM_STATUS: \033[92mONLINE\033[0m
+    [0m
+    [90m>> GHOST_MAP_PROTOCOL_INITIATED...[0m
+    [90m>> SYSTEM_STATUS: \033[92mONLINE[0m
     
-    \033[1m>> ACCESS_TERMINAL: \033[96mhttp://{}:5001\033[0m
+    [1m>> ACCESS_TERMINAL: \033[96mhttp://{}:5001\[0m
     """.format(local_ip))
     
     log = logging.getLogger('werkzeug')
