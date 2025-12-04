@@ -46,7 +46,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ghost-map.git](https://github.com/MakeStepanGreatAgain/web-visual--NET-VIS--ghost-map-protocol
+git clone https://github.com/MakeStepanGreatAgain/web-visual--NET-VIS--ghost-map-protocol
 cd web-visual--NET-VIS--ghost-map-protocol
 
 # Install dependencies
