@@ -205,7 +205,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Made with 💀 by R4ggedy**
+**Made 💀 by R4ggedy**
 
 ⭐ Star this repo if you find it useful!
 
