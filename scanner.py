@@ -11,8 +11,7 @@ SCAPY_AVAILABLE = False
 try:
     import scapy.all as scapy
     SCAPY_AVAILABLE = True
-except Exception as e:
-    print(f"[SCANNER] Scapy not available (Error: {e}). Switching to System Scanner.")
+except Exception:
     SCAPY_AVAILABLE = False
 
 def get_local_ip_info():
@@ -38,15 +37,13 @@ def get_local_ip_info():
                         cidr = sum(bin(int(x)).count('1') for x in netmask.split('.'))
                         subnet = f"{target_ip.rsplit('.', 1)[0]}.0/{cidr}"
                         return target_ip, iface, subnet
-    except Exception as e:
-        print(f"Netifaces error: {e}")
+    except Exception:
+        pass
 
     if target_ip != '127.0.0.1':
         subnet = f"{target_ip.rsplit('.', 1)[0]}.0/24"
-        print(f"[SCANNER] Using fallback: IP={target_ip}, Subnet={subnet}")
         return target_ip, 'unknown', subnet
     
-    print(f"[SCANNER] FAILED to detect network IP, using localhost")
     return '127.0.0.1', 'lo0', '127.0.0.1/32'
 
 def get_mac_vendor(mac_address):
@@ -60,10 +57,7 @@ def get_mac_vendor(mac_address):
     return "Unknown"
 
 def system_scan(subnet):
-    """
-    Fallback scanner using system ping and arp.
-    """
-    print(f"[SCANNER] Running System Scan on {subnet}...")
+    """Fallback scanner using system ping and arp."""
     devices = []
     
 
@@ -115,8 +109,6 @@ def system_scan(subnet):
 def scan_network(ip_range, iface):
     if not SCAPY_AVAILABLE:
         return system_scan(ip_range)
-
-    print(f"Scanning {ip_range} on {iface}...")
     
     try:
         arp_request = scapy.ARP(pdst=ip_range)
@@ -135,8 +127,7 @@ def scan_network(ip_range, iface):
             clients_list.append(client_dict)
         return clients_list
         
-    except Exception as e:
-        print(f"Scapy scan failed ({e}). Falling back to system scan.")
+    except Exception:
         return system_scan(ip_range)
 
 def scan_ports(ip):
@@ -247,11 +238,9 @@ def scan_nmap(ip):
 
 def get_network_nodes():
     local_ip, iface, subnet = get_local_ip_info()
-    print(f"[SCANNER] Detected: IP={local_ip}, Interface={iface}, Subnet={subnet}")
     
     if subnet.startswith('127'):
         subnet = '192.168.1.0/24'
-        print(f"[SCANNER] Localhost detected, trying common subnet: {subnet}")
         
     devices = scan_network(subnet, iface)
     

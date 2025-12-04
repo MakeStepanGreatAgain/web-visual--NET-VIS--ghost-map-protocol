@@ -4,7 +4,6 @@ import threading
 import time
 import ipaddress
 import logging
-import copy
 
 app = Flask(__name__)
 
@@ -25,7 +24,6 @@ def background_scan():
     while True:
         if is_scanning:
             try:
-                print("Starting background scan cycle...")
                 current_devices = scanner.get_network_nodes()
                 
                 with scan_lock:
@@ -48,10 +46,8 @@ def background_scan():
                     for ip in known_devices:
                         if ip not in found_ips:
                             known_devices[ip]['active'] = False
-                            
-                print(f"Scan cycle complete. Total known devices: {len(known_devices)}")
             except Exception as e:
-                print(f"Scan error: {e}")
+                pass  # Silent fail
         else:
             time.sleep(1)
             continue
@@ -125,6 +121,14 @@ def get_scan_results():
         }
     })
 
+@app.route('/api/local-ip')
+def get_local_ip():
+    try:
+        local_ip, _, _ = scanner.get_local_ip_info()
+        return jsonify({'ip': local_ip})
+    except Exception as e:
+        return jsonify({'ip': '127.0.0.1', 'error': str(e)})
+
 @app.route('/api/report')
 def generate_report():
     with scan_lock:
@@ -181,23 +185,32 @@ if __name__ == '__main__':
     except:
         local_ip = "127.0.0.1"
 
-    print(r"""
-    \033[96m
-    ███╗   ██╗███████╗████████╗    ██╗   ██╗██╗███████╗
+    # Terminal colors
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    GRAY = '\033[90m'
+    BOLD = '\033[1m'
+    RESET = '\033[0m'
+    
+    print(f"""
+{CYAN}    ███╗   ██╗███████╗████████╗    ██╗   ██╗██╗███████╗
     ████╗  ██║██╔════╝╚══██╔══╝    ██║   ██║██║██╔════╝
     ██╔██╗ ██║█████╗     ██║       ██║   ██║██║███████╗
     ██║╚██╗██║██╔══╝     ██║       ╚██╗ ██╔╝██║╚════██║
     ██║ ╚████║███████╗   ██║        ╚████╔╝ ██║███████║
-    ╚═╝  ╚═══╝╚══════╝   ╚═╝         ╚═══╝  ╚═╝╚══════╝
-    [0m
-    [90m>> GHOST_MAP_PROTOCOL_INITIATED...[0m
-    [90m>> SYSTEM_STATUS: \033[92mONLINE[0m
+    ╚═╝  ╚═══╝╚══════╝   ╚═╝         ╚═══╝  ╚═╝╚══════╝{RESET}
+
+    {GRAY}>> GHOST_MAP_PROTOCOL v2.0{RESET}
+    {GRAY}>> Status: {GREEN}ONLINE{RESET}
     
-    [1m>> ACCESS_TERMINAL: \033[96mhttp://{}:5001\[0m
-    """.format(local_ip))
+    {BOLD}>> Open: {CYAN}http://{local_ip}:5001{RESET}
+    {GRAY}>> Press Ctrl+C to stop{RESET}
+""")
     
+    # Suppress all Flask/Werkzeug logs
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
     app.logger.disabled = True
+    logging.getLogger().setLevel(logging.ERROR)
     
     app.run(debug=False, host=local_ip, port=5001, use_reloader=False)
