@@ -33,18 +33,6 @@
 
 ---
 
-## 🖼️ Screenshots
-
-> **Note**: Add your screenshots here after deployment!
-
-```
-![Ghost Map Interface](screenshots/main.png)
-![Device Details](screenshots/details.png)
-![Network Graph](screenshots/graph.png)
-```
-
----
-
 ## 🚀 Quick Start
 
 ### Prerequisites
