@@ -58,7 +58,7 @@ python3 app.py
 
 The app will automatically detect your local IP and bind to it. Access the interface at:
 ```
-http://YOUR_LOCAL_IP:5001
+http://192.168.X.X:5001
 ```
 
 ### 🔓 Enhanced Mode (Optional)
