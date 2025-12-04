@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHOST_MAP_PROTOCOL // V2.0</title>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="overlay">
+        <div class="header">
+            <h1>>> GHOST_MAP_PROTOCOL // ACTIVE</h1>
+            <div class="status-bar">
+                <span id="status-text">SYSTEM_INTEGRITY: 100%</span>
+                <span id="scan-status">SCANNER_STATUS: STANDBY</span>
+                <span id="device-count">NODES_DETECTED: 0</span>
+                <span id="quality-indicator" title="Network Health">NET_HEALTH: --%</span>
+            </div>
+            <div id="stats-panel" class="stats-panel">
+                <!-- Populated by JS -->
+            </div>
+
+            <div class="toolbar">
+                <button id="btn-report" title="Save Report"><i class="fas fa-file-code"></i> EXPORT_LOG</button>
+                <button id="btn-filter" title="Filter Nodes"><i class="fas fa-filter"></i> VIEW: ALL</button>
+            </div>
+        </div>
+
+        <div id="network-graph"></div>
+
+        <div id="node-details" class="details-panel hidden">
+            <div class="panel-header">
+                <h3>>> TARGET_ANALYSIS</h3>
+                <button id="close-details">X</button>
+            </div>
+            <div class="panel-content">
+                <p>IP_ADDRESS: <span id="detail-ip"></span></p>
+                <p>HOSTNAME: <span id="detail-hostname"></span></p>
+                <p>MAC_ADDR: <span id="detail-mac"></span></p>
+                <p>VENDOR_ID: <span id="detail-vendor"></span></p>
+                <p>DEVICE_TYPE: <span id="detail-type"></span></p>
+                <p>LATENCY: <span id="detail-latency"></span></p>
+                <p>OPEN_PORTS: <span id="detail-ports"></span></p>
+
+                <div id="detail-actions" class="actions-container">
+                    <!-- Buttons injected by JS -->
+                </div>
+
+                <div id="nmap-results" class="nmap-panel hidden">
+                    <!-- Nmap output -->
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="scan-btn">INITIATE_MONITORING()</button>
+        </div>
+
+        <!-- Decorative Elements -->
+        <div
+            style="position: absolute; bottom: 20px; right: 20px; color: rgba(0, 243, 255, 0.3); font-size: 10px; pointer-events: none;">
+            SECURE_CONNECTION_ESTABLISHED<br>
+            ENCRYPTION: AES-256-GCM<br>
+            SESSION_ID: <span id="session-id">Loading...</span>
+        </div>
+    </div>
+
+    <script>
+        // Random Session ID
+        document.getElementById('session-id').innerText = Math.random().toString(36).substring(2, 15).toUpperCase();
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
