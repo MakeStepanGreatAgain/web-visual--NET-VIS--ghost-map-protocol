@@ -8,7 +8,6 @@ import copy
 
 app = Flask(__name__)
 
-# Security Headers
 @app.after_request
 def add_security_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
@@ -17,8 +16,7 @@ def add_security_headers(response):
     response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:;"
     return response
 
-# Global State
-known_devices = {} # Key: IP, Value: Device Dict
+known_devices = {}
 is_scanning = False
 scan_lock = threading.Lock()
 
@@ -31,30 +29,22 @@ def background_scan():
                 current_devices = scanner.get_network_nodes()
                 
                 with scan_lock:
-                    # Mark all as inactive first (unless we want to keep them active until proven otherwise? 
-                    # Better: Mark all as inactive, then mark found as active.
-                    # But we don't want to flicker. 
-                    # Let's create a set of found IPs.
                     found_ips = set()
                     
                     for device in current_devices:
                         ip = device['ip']
                         found_ips.add(ip)
                         
-                        # Update or Add
                         if ip in known_devices:
-                            # Update existing
                             known_devices[ip].update(device)
                             known_devices[ip]['active'] = True
                             known_devices[ip]['last_seen'] = time.time()
                         else:
-                            # New device
                             device['active'] = True
                             device['first_seen'] = time.time()
                             device['last_seen'] = time.time()
                             known_devices[ip] = device
                     
-                    # Mark missing devices as inactive
                     for ip in known_devices:
                         if ip not in found_ips:
                             known_devices[ip]['active'] = False
@@ -63,13 +53,11 @@ def background_scan():
             except Exception as e:
                 print(f"Scan error: {e}")
         else:
-            # Sleep a bit to avoid busy loop when not scanning
             time.sleep(1)
             continue
             
-        time.sleep(5) # Scan every 5 seconds when active (faster updates)
+        time.sleep(5)
 
-# Start background scanner
 scan_thread = threading.Thread(target=background_scan, daemon=True)
 scan_thread.start()
 
@@ -86,7 +74,6 @@ def calculate_quality(devices):
     
     active_devices = [d for d in devices if d.get('active', False)]
     
-    # Factor 1: High Latency (Active only)
     high_latency_count = 0
     for d in active_devices:
         lat = d.get('latency', 'N/A')
@@ -103,7 +90,6 @@ def calculate_quality(devices):
         score -= penalty
         issues.append(f"-{penalty}%: {high_latency_count} devices with high latency (>100ms)")
 
-    # Factor 2: Unknown Devices (Active only)
     unknown_count = sum(1 for d in active_devices if d.get('vendor') == 'Unknown')
     if unknown_count > 0:
         penalty = unknown_count * 2
@@ -127,7 +113,6 @@ def stop_scan():
 @app.route('/api/scan')
 def get_scan_results():
     with scan_lock:
-        # Convert dict to list
         devices_list = list(known_devices.values())
         
     score, issues = calculate_quality(devices_list)
